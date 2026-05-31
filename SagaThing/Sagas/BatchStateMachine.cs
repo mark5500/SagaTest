@@ -7,9 +7,13 @@ public class BatchStateMachine : MassTransitStateMachine<BatchState>
 {
     public State Processing { get; private set; } = null!;
     public State Completed { get; private set; } = null!;
+    public State Stale { get; private set; } = null!;
 
     public Event<StartBatch> BatchStarted { get; private set; } = null!;
     public Event<ItemProcessed> ItemProcessed { get; private set; } = null!;
+    public Event<BatchStale> BatchStale { get; private set; } = null!;
+
+    public Schedule<BatchState, BatchTimeout> BatchTimeoutSchedule { get; private set; } = null!;
 
     public BatchStateMachine()
     {
@@ -17,6 +21,13 @@ public class BatchStateMachine : MassTransitStateMachine<BatchState>
 
         Event(() => BatchStarted, x => x.CorrelateById(m => m.Message.CorrelationId));
         Event(() => ItemProcessed, x => x.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => BatchStale, x => x.CorrelateById(m => m.Message.CorrelationId));
+
+        Schedule(() => BatchTimeoutSchedule, x => x.TimeoutTokenId, s =>
+        {
+            s.Delay = TimeSpan.FromHours(24);
+            s.Received = r => r.CorrelateById(m => m.Message.CorrelationId);
+        });
 
         Initially(
             When(BatchStarted)
@@ -27,6 +38,7 @@ public class BatchStateMachine : MassTransitStateMachine<BatchState>
                     ctx.Saga.ProcessedCount = 0;
                 })
                 .TransitionTo(Processing)
+                .Schedule(BatchTimeoutSchedule, ctx => new BatchTimeout { CorrelationId = ctx.Saga.CorrelationId })
                 .ThenAsync(async ctx =>
                 {
                     var endpoint = await ctx.GetSendEndpoint(new Uri($"queue:process-item-{ctx.Saga.TenantId}"));
@@ -62,8 +74,27 @@ public class BatchStateMachine : MassTransitStateMachine<BatchState>
                 })
                 .If(
                     ctx => ctx.Saga.ProcessedCount >= ctx.Saga.TotalItems,
-                    binder => binder.TransitionTo(Completed).Finalize()
+                    binder => binder.Unschedule(BatchTimeoutSchedule).TransitionTo(Completed).Finalize()
                 )
+        );
+
+        During(Processing,
+            When(BatchStale)
+                .Unschedule(BatchTimeoutSchedule)
+                .TransitionTo(Stale)
+                .Finalize()
+        );
+
+        During(Processing,
+            When(BatchTimeoutSchedule.Received)
+                .Then(ctx => ctx.Saga.ProcessedCount = -1) // sentinel: timed out
+                .ThenAsync(async ctx => await ctx.Publish(new BatchStale
+                {
+                    CorrelationId = ctx.Saga.CorrelationId,
+                    FailedItemIndex = -1
+                }))
+                .TransitionTo(Stale)
+                .Finalize()
         );
 
         SetCompletedWhenFinalized();
@@ -76,3 +107,4 @@ public class BatchStateMachine : MassTransitStateMachine<BatchState>
             : tenantId.Trim().ToLowerInvariant();
     }
 }
+

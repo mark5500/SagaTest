@@ -11,4 +11,5 @@ public class BatchState : SagaStateMachineInstance, ISagaVersion
     public int TotalItems { get; set; }
     public int ProcessedCount { get; set; }
     public int Version { get; set; }
+    public Guid? TimeoutTokenId { get; set; }
 }
