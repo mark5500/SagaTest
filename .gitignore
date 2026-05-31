@@ -1,0 +1,30 @@
+# Build output
+bin/
+obj/
+
+# .NET user files
+*.user
+*.suo
+.vs/
+.idea/
+
+# Aspire / secrets
+**/appsettings.Development.json
+**/secrets.json
+**/.secrets/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaThing", "SagaThing\SagaThing.csproj", "{3FABBC16-980A-45D4-BAB5-5A5F7E90BA80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaThing.AppHost", "SagaThing.AppHost\SagaThing.AppHost.csproj", "{2799C5DE-B1C5-4DD4-9E8D-3234C3AFDD8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaThing.ServiceDefaults", "SagaThing.ServiceDefaults\SagaThing.ServiceDefaults.csproj", "{6E387839-A05B-4B8B-8664-B11762A99698}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FABBC16-980A-45D4-BAB5-5A5F7E90BA80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FABBC16-980A-45D4-BAB5-5A5F7E90BA80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FABBC16-980A-45D4-BAB5-5A5F7E90BA80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FABBC16-980A-45D4-BAB5-5A5F7E90BA80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2799C5DE-B1C5-4DD4-9E8D-3234C3AFDD8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2799C5DE-B1C5-4DD4-9E8D-3234C3AFDD8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2799C5DE-B1C5-4DD4-9E8D-3234C3AFDD8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2799C5DE-B1C5-4DD4-9E8D-3234C3AFDD8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E387839-A05B-4B8B-8664-B11762A99698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E387839-A05B-4B8B-8664-B11762A99698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E387839-A05B-4B8B-8664-B11762A99698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E387839-A05B-4B8B-8664-B11762A99698}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
